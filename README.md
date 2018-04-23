@@ -20,19 +20,24 @@ Or install it yourself as:
 
 ## Usage
 
-`3.d6+4` to roll a six-sided die three times and add 4 to the total
+`Polyhedral::Die.d4` to create a four-sided die
+`Polyhedral::Die.d6` to create a six-sided die
+`Polyhedral::Die.d8` to create a eight-sided die
+`Polyhedral::Die.d10` to create a ten-sided die
+`Polyhedral::Die.d12` to create a twelve-sided die
+`Polyhedral::Die.d20` to create a twenty-sided die
+`Polyhedral::Die.new(n)` to create an arbitrary n-sided die
 
-`4.d6.drop_lowest` to roll four six-sided dice and add together the best three.
+`Polyhedral::Dice.new(array_of_dice)` to create a dice set
 
-`1.d20.with_advantage` to roll two d20 and keep the best one
+```
+dice = Polyhedral::Dice.new(Array.new(4) {Die.d6})
+dice.roll # rolls the dice - returns the set of dice
+dice.roll.reroll_ones # rolls the dice, rerolls any dice showing a one
+dice.roll.drop_lowest # rolls the dice, drops the lowest die (now have 3d6 left)
+dice.sum # adds up the dice faces
+```
 
-`Polyhedral::Die.d20.with_advantage` will manage the same thing
-
-`1.d20.with_disadvantage` to roll two d20 and keep the crappy one
-
-`Polyhedral::Die.d20.with_disadvantage` will manage the same thing
-
-`%w{str dex con int wis cha}.map {|attr| [attr, 4.d6.drop_lowest]}.to_h` will give you your starting character ability scores
 
 ## Contributing
 
