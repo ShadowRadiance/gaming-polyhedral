@@ -1,8 +1,7 @@
-require "spec_helper"
+require 'spec_helper'
 
 module Polyhedral
   RSpec.describe Die do
-
     describe '#new' do
       context 'with zero sides' do
         it 'raises a RuntimeError' do
@@ -20,8 +19,8 @@ module Polyhedral
         end
       end
     end
-    
-    [4,6,8,10,12,20,100].each do |sides|
+
+    [4, 6, 8, 10, 12, 20, 100].each do |sides|
       context "with a d#{sides}" do
         let(:die) { Die.new(sides) }
         let(:another_die) { Die.new(sides) }
@@ -52,20 +51,20 @@ module Polyhedral
         end
       end
     end
-    
-    describe "<=>" do
+
+    describe '<=>' do
       let(:die) { Die.new }
       let(:another_die) { Die.new }
       before(:each) do
         die.roll
         another_die.roll
       end
-      it "can be compared to another die" do
-        expect(die<=>another_die).to be_integer
+      it 'can be compared to another die' do
+        expect(die <=> another_die).to be_integer
       end
     end
-    
-    [4,6,8,10,12,20,100].each do |sides|
+
+    [4, 6, 8, 10, 12, 20, 100].each do |sides|
       describe "#d#{sides}" do
         subject { Die.send("d#{sides}".to_sym) }
         it "creates a d#{sides}" do
@@ -73,6 +72,5 @@ module Polyhedral
         end
       end
     end
-    
   end
 end
