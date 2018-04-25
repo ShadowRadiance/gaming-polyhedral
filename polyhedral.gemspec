@@ -12,6 +12,8 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Roll some dice. D&D Style'
   spec.homepage      = 'https://github.com/shadowradiance/polyhedral'
   spec.license       = 'MIT'
+  
+  spec.metadata['allowed_push_host'] = 'nothing'
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
