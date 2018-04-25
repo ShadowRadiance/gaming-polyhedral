@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'polyhedral/die_histogram'
 
 module Polyhedral
   RSpec.describe Die do
@@ -24,17 +25,7 @@ module Polyhedral
       context "with a d#{sides}" do
         let(:die) { Die.new(sides) }
         let(:another_die) { Die.new(sides) }
-        let(:number_of_test_rolls) { 100000 }
-        let(:histogram) do
-          Hash.new(0).tap do |hist|
-            number_of_test_rolls.times do
-              hist[die.roll.face] += 1
-            end
-          end
-        end
-        let(:expected_face_count) { number_of_test_rolls/sides.to_f }
-        let(:allowed_error) { number_of_test_rolls/100.0 }
-        
+
         it "has #{sides} sides" do
           expect(die.sides).to eq(sides)
         end
@@ -44,9 +35,9 @@ module Polyhedral
         end
 
         it 'is a fair die' do
-          # puts histogram
-          (1..sides).each do |n|
-            expect(histogram[n]).to be_within(allowed_error).of(expected_face_count)
+          h = DieHistogram.new(die: die, rolls: 100_000)
+          (1..sides).each do
+            expect(h).to be_fair
           end
         end
       end
