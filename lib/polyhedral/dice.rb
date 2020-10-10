@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Polyhedral
   class Dice
     include Enumerable
-    def each
-      @dice.each { |d| yield d }
+    def each(&block)
+      @dice.each(&block)
     end
 
     def initialize(dice_array = [])
@@ -10,6 +12,7 @@ module Polyhedral
       raise 'Pass an array of dice' unless dice_array.all? do |die|
         die.is_a? Die
       end
+
       @dice = dice_array
     end
 

@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 module Polyhedral
   class Die
     include Comparable
     def <=>(other)
       return nil unless other.respond_to? :face
+
       face <=> other.face
     end
 
@@ -10,6 +13,7 @@ module Polyhedral
 
     def initialize(sides = 6)
       raise 'Sides must be positive' unless sides.positive?
+
       @sides = sides
       @face = sides
     end

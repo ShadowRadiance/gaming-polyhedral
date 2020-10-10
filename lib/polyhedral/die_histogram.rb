@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 module Polyhedral
   class DieHistogram
     attr_reader :die, :rolls, :tolerance
+
     def initialize(die:, rolls:, tolerance: nil)
       @die = die
       @rolls = rolls
