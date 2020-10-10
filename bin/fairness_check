@@ -1,0 +1,61 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'polyhedral'
+require 'polyhedral/die_histogram'
+
+# You can add fixtures and/or initialization code here to make experimenting
+# with your gem easier. You can also use a different console, if you like.
+
+SIDES = [4, 6, 8, 10, 12, 20].freeze
+POWERS = (2..6).freeze
+
+DieHistogram = Polyhedral::DieHistogram
+Die = Polyhedral::Die
+
+def progress_bar(before, after = nil)
+  print(before)
+  result = yield
+  print(after) if after
+  result
+end
+
+def check_fairness_for_rolls(sides, power)
+  rolls = 10**power
+  progress_bar(rolls, ' ') do
+    [
+      rolls,
+      DieHistogram.new(die: Die.new(sides), rolls: rolls, progress_marker: '.').fair?
+    ]
+  end
+end
+
+def check_fairness_for_sides(sides)
+  progress_bar("d#{sides}:".rjust(4), "\n") do
+    [
+      "d#{sides}".rjust(3),
+      POWERS.map { |power| check_fairness_for_rolls(sides, power) }.to_h
+    ]
+  end
+end
+
+puts <<~ENDPUTS
+  'Fairness' is defined as whether, after rolling some dice, each face appears about the same number of times.
+  For example, rolling a 6-sided die 100000 times, one would expect each face to show up 'about' 100000/6 or #{100_000 / 6} times.
+
+  The algorithm allows a tolerance of one hundredth the number of rolls to check how fair this die is.
+
+  For low numbers of rolls, the tolerance is tiny, and often will show a die skewing one way or another.
+  For example, for 100 rolls (a tolerance of 1) it would expect the 6-sider to appear as a 6 #{100 / 6} ± 1 time (#{100 / 6 - 1} to #{100 / 6 + 1})
+
+  For high numbers of rolls, the tolerance is more reasonable, and often will show the true "fairness" of a die.
+  For example, for 10000 rolls (a tolerance of 100) it would expect the 6-sider to appear as a 6 #{10_000 / 6} ± 100 times (#{10_000 / 6 - 100} to #{10_000 / 6 + 100})
+
+  You should expect to see each die size reporting 'false' for fairness for the smaller sets of rolls, but 'true' for the larger sets
+  (usually switching over around the 1000/10000 mark)
+ENDPUTS
+
+h = SIDES.map { |sides| check_fairness_for_sides(sides) }.to_h
+puts
+pp h

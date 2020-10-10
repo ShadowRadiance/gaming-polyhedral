@@ -4,10 +4,11 @@ module Polyhedral
   class DieHistogram
     attr_reader :die, :rolls, :tolerance
 
-    def initialize(die:, rolls:, tolerance: nil)
+    def initialize(die:, rolls:, tolerance: nil, progress_marker: nil)
       @die = die
       @rolls = rolls
       @tolerance = tolerance || (rolls / 100.0)
+      @progress_marker = progress_marker
     end
 
     def histogram
@@ -31,9 +32,13 @@ module Polyhedral
     end
 
     def regenerate_histogram
-      Hash.new(0).tap do |hist|
-        rolls.times { hist[die.roll.face] += 1 }
+      hist = Hash.new(0)
+      marker_counter = rolls / 10
+      rolls.times do |n|
+        hist[die.roll.face] += 1
+        print(@progress_marker) if @progress_marker && (n % marker_counter).zero?
       end
+      hist
     end
   end
 end
